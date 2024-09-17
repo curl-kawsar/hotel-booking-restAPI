@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--swidmy$k)&ut8u#hqa$#3q9k-ct#lxa3*378fs&wx=8$ziz4$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
