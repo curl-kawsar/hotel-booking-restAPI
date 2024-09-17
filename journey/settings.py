@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure--swidmy$k)&ut8u#hqa$#3q9k-ct#lxa3*378fs&wx=8$ziz4$'
-
+DEBUG = True
 # SECURITY WARNING: don't run with debug turned on in production!
 ALLOWED_HOSTS = ["https://travel-junction.onrender.com"]
 CSRF_TRUSTED_ORIGINS = ['https://travel-junction.onrender.com', 'https://*127.0.0.1']
