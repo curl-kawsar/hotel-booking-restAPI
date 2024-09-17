@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Availability</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            color: #333;
+            width: 300px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Check Hotel Availability</h1>
+    <form id="availability-form">
+        {% csrf_token %}
+        <label for="destination">Destination:</label>
+        <select id="destination" name="destination" required>
+            <option value="">Select a destination</option>
+        </select><br>
+
+        <label for="total-adults">Total Adults:</label>
+        <input type="number" id="total-adults" name="total_adults" min="1" value="1" required><br>
+
+        <label for="total-childrens">Total Children:</label>
+        <input type="number" id="total-childrens" name="total_childrens" min="0" value="0" required><br>
+
+        <button type="button" onclick="checkAvailability()">Check Availability</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        async function fetchDestinations() {
+            const response = await fetch('/api/destinations/');
+            const destinations = await response.json();
+            const destinationSelect = document.getElementById('destination');
+            destinations.forEach(destination => {
+                const option = document.createElement('option');
+                option.value = destination.id;
+                option.text = destination.name;
+                destinationSelect.add(option);
+            });
+        }
+
+        async function checkAvailability() {
+            const form = document.getElementById('availability-form');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            const csrftoken = getCookie('csrftoken');
+
+            const response = await fetch('/api/check-availability/', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchDestinations);
+    </script>
+</body>
+</html>

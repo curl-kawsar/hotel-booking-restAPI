@@ -30,3 +30,8 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = '__all__'
+
+class AvailabilityCheckSerializer(serializers.Serializer):
+    destination = serializers.IntegerField()
+    total_adults = serializers.IntegerField()
+    total_childrens = serializers.IntegerField()
