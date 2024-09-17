@@ -14,4 +14,5 @@ router.register(r'contacts', views.ContactViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/check-availability/', views.check_availability, name='check-availability'),
 ]
